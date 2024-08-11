@@ -60,8 +60,13 @@ button:hover {
     background-color: #eb5e34;
 }
 
-button:nth-child(4),
+.operation,
 .equals {
     color: #efefef;
     background-color: #282828;
+}
+
+.operation:focus,
+.equals:focus {
+    opacity: 0.8;
 }

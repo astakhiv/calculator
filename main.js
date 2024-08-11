@@ -12,10 +12,10 @@ function multiply(a, b) {
 
 function divide(a, b) {
     if (b === 0) {
-        throw new Error("Division by zero");
+        return "div by zero :(";
     }
 
-    return a / b;
+    return Math.round((a / b)*100)/100;
 }
 
 function operate(firstNumber, secondNumber, operator) {
@@ -27,67 +27,66 @@ function operate(firstNumber, secondNumber, operator) {
         return multiply(firstNumber, secondNumber);
     } else if (operator === "/") {
         return divide(firstNumber, secondNumber);
+    } else {
+        return 0;
     }
 }
 
-const operations = {
-    "+": true,
-    "-": true,
-    "*": true,
-    "/": true,
-};
+const output = document.querySelector(".output");
+const numbers = document.querySelectorAll("button:not(.clear):not(.equals):not(.operation)");
+const operations = document.querySelectorAll(".operation");
+const clear = document.querySelector(".clear");
+const equals = document.querySelector(".equals");
 
 let firstNumber = "";
 let operation = "";
 let secondNumber = "";
 
-let displayValue = "";
-const output = document.querySelector(".output");
-
-
-function readValues() {
-    const text = output.innerText;
-    let i = 0;
-    while(isNaN(+text[i]) === false) {
-        console.log(text[i]);
-        firstNumber += text[i++];
-    }
-
-    if (firstNumber === "") return false;
-
-    while (operations[text[i]]) {
-        console.log(text[i++]);
-    }
-
-    operation = text[i-1];
-
-    while (isNaN(+text[i]) === false) {
-        secondNumber += text[i++];
-    }
-
-    if (secondNumber === "") return false;
-
-    return true;
+function clearValues() {
+    firstNumber = "";
+    negate = false;
+    operation = "";
+    secondNumber = "";
 }
 
-document.querySelectorAll("button:not(.clear):not(.equals)").forEach((button) => {
+numbers.forEach((button) => {
         button.addEventListener("click", (e) => {
         const value = e.target.textContent;
         
+        if (output.innerText === "0") {
+            output.innerText = "";
+        }
+
         output.innerText += value;
-        displayValue += value;
-    })
+    });
 });
 
-document.querySelector(".clear").addEventListener("click", () => {
-    output.innerText = "";
+operations.forEach((button) => {
+    button.addEventListener("click", (e) => {
+        const buttonOperation = e.target.textContent;
+    
+        firstNumber = "";
+        operation = buttonOperation;
+
+        firstNumber += output.innerText;
+        console.log(firstNumber, operation);
+        output.innerText = "0";
+    });
 });
 
-document.querySelector(".equals").addEventListener("click", () => {
-    const state = readValues();
+clear.addEventListener("click", () => {
+    output.innerText = "0";
+    firstNumber = "";
+    secondNumber = "";
+});
 
-    console.log(state);
-    console.log(firstNumber, operation, secondNumber);
+equals.addEventListener("click", () => {
+    firstNumber = +firstNumber;
+    secondNumber = +output.innerText;
+    if (operation === "") return;
 
-    operate(firstNumber, operation, secondNumber);
+    const result = operate(firstNumber, secondNumber, operation);
+
+    output.innerText = result;
+    clearValues();
 });
