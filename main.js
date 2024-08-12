@@ -1,32 +1,12 @@
-function add(a, b) {
-    return a + b;
-}
-
-function subtract(a, b) {
-    return a - b;
-} 
-
-function multiply(a, b) {
-    return a * b;
-}
-
-function divide(a, b) {
-    if (b === 0) {
-        return "div by zero :(";
-    }
-
-    return Math.round((a / b)*100)/100;
-}
-
 function operate(firstNumber, secondNumber, operator) {
     if (operator === "+") {
-        return add(firstNumber, secondNumber);
+        return (firstNumber + secondNumber);
     } else if (operator === "-") {
-        return subtract(firstNumber, secondNumber);
+        return (firstNumber - secondNumber);
     } else if (operator === "*") {
-        return multiply(firstNumber, secondNumber);
+        return (firstNumber * secondNumber);
     } else if (operator === "/") {
-        return divide(firstNumber, secondNumber);
+        return (secondNumber === 0) ? ("div by zero :(") :  (Math.round((firstNumber / secondNumber) * 100) / 100);
     } else {
         return 0;
     }
@@ -49,11 +29,13 @@ function clearValues() {
     secondNumber = "";
 }
 
+let needClearOutput = false;
+
 numbers.forEach((button) => {
         button.addEventListener("click", (e) => {
         const value = e.target.textContent;
         
-        if (output.innerText === "0") {
+        if (output.innerText === "0" || needClearOutput) {
             output.innerText = "";
         }
 
@@ -63,14 +45,11 @@ numbers.forEach((button) => {
 
 operations.forEach((button) => {
     button.addEventListener("click", (e) => {
-        const buttonOperation = e.target.textContent;
+        operation = e.target.textContent;
     
-        firstNumber = "";
-        operation = buttonOperation;
+        firstNumber = isNaN(+output.innerText) ? 0 : output.innerText;
 
-        firstNumber += output.innerText;
-        console.log(firstNumber, operation);
-        output.innerText = "0";
+        needClearOutput = true;
     });
 });
 
@@ -81,12 +60,11 @@ clear.addEventListener("click", () => {
 });
 
 equals.addEventListener("click", () => {
-    firstNumber = +firstNumber;
-    secondNumber = +output.innerText;
     if (operation === "") return;
+    secondNumber = output.innerText;
 
-    const result = operate(firstNumber, secondNumber, operation);
+    const result = operate(+firstNumber, +secondNumber, operation);
 
-    output.innerText = result;
     clearValues();
+    output.innerText = result;
 });
