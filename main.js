@@ -33,6 +33,19 @@ modulo.addEventListener("click", ModuloUI);
 dot.addEventListener("click", DotUI);
 document.addEventListener("keypress", KeyboardInput);
 
+window.addEventListener("beforeunload", () => {
+    numbers.forEach((num) => num.removeEventListener("click"));
+    operations.forEach((op) => op.removeEventListener("click"));
+
+    equals.removeEventListener("click");
+    clear.removeEventListener("click");
+    backspace.removeEventListener("click");
+    negate.removeEventListener("click");
+    modulo.removeEventListener("click");
+    dot.removeEventListener("click");
+    document.removeEventListener("keypress");
+});
+
 function StringIsNumber(str) {
     return isNaN(+str) === false;
 }
@@ -52,7 +65,9 @@ function KeyboardInput(e) {
         PrintNumberUI(e.key);
     } else {
         const func = funcForKey[e.key];
+
         if (func === undefined) return;
+        
         func(e.key);
     }
 
